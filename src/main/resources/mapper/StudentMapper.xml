@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dongli.dao.StudentDao">
+    <resultMap id="BaseResultMap" type="com.dongli.entity.Room">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="rno" property="rno" jdbcType="VARCHAR" />
+        <result column="roomSize" property="roomSize" jdbcType="INTEGER" />
+        <result column="currentSize" property="currentSize" jdbcType="INTEGER" />
+        <result column="roomStatus" property="roomStatus" jdbcType="VARCHAR" />
+        <result column="major" property="major" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="StudentMap" type="com.dongli.entity.Student">
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="IDNum" property="IDNum" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="VARCHAR" />
+        <result column="age" property="age" jdbcType="INTEGER" />
+        <result column="tel" property="tel" jdbcType="VARCHAR" />
+        <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+        <result column="major" property="major" jdbcType="VARCHAR" />
+        <result column="rno" property="rno" jdbcType="VARCHAR" />
+        <result column="registration" property="registration" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="PayResultMap" type="com.dongli.entity.Pay">
+        <result column="IDNum" property="IDNum" jdbcType="VARCHAR" />
+        <result column="money" property="money" jdbcType="VARCHAR" />
+        <result column="payDate" property="payDate" jdbcType="TIMESTAMP"/>
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="tuition" property="tuition" jdbcType="INTEGER" />
+        <result column="dormitoryFee" property="dormitoryFee" jdbcType="INTEGER" />
+        <result column="costumes" property="costumes" jdbcType="INTEGER" />
+        <result column="result" property="result" jdbcType="VARCHAR" />
+        <result column="proofMaterial" property="proofMaterial" jdbcType="VARCHAR" />
+        <result column="loan" property="loan" jdbcType="INTEGER" />
+        <result column="green" property="green" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectRoom" resultMap="BaseResultMap" resultType="com.dongli.entity.Room">
+        SELECT * FROM room
+    </select>
+
+    <select id="selectByIDNum" resultMap="StudentMap" resultType="com.dongli.entity.Student">
+        SELECT * FROM student
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </select>
+
+    <update id="updateByIDNum" parameterType="com.dongli.entity.Student">
+        UPDATE student
+        <set>
+            tel = #{tel},
+            sex = #{sex},
+            birthday = #{birthday},
+            age = #{age},
+            name = #{name}
+        </set>
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </update>
+
+    <update id="updatePwdByIDNum" parameterType="com.dongli.entity.Student">
+        UPDATE user
+        <set>
+            password = #{password}
+        </set>
+        <where>
+            account = #{IDNum}
+        </where>
+    </update>
+
+    <update id="updateGreen" parameterType="hashmap">
+        UPDATE pay
+        <set>
+            money = #{money},
+            green = #{green},
+            costumes = #{costumes},
+            proofMaterial = #{proofMaterial},
+            loan = #{loan},
+            payDate = date()
+        </set>
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </update>
+
+    <update id="updateRoomByRno" parameterType="com.dongli.entity.Room">
+        UPDATE room
+        <set>
+            currentSize = #{currentSize},
+            roomStatus = #{roomStatus}
+        </set>
+        <where>
+            rno = #{rno}
+        </where>
+    </update>
+
+    <update id="updateRooomOfStudentByIDNum" parameterType="com.dongli.entity.Student">
+        UPDATE student
+        <set>
+            rno = #{rno}
+        </set>
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </update>
+
+    <select id="selectGreenByIDNum" resultType="String">
+        SELECT green FROM pay
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </select>
+
+    <select id="selectPayByIDNum" resultMap="PayResultMap">
+        SELECT * FROM pay
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </select>
+
+    <update id="updatePay" parameterType="hashmap">
+        UPDATE pay
+        <set>
+            money = #{money},
+            result = '已完成',
+            payDate = date()
+        </set>
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </update>
+
+    <update id="updateResByIDNum">
+        UPDATE student
+        <set>
+            registration = '已报到'
+        </set>
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </update>
+</mapper>

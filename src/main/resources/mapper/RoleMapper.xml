@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dongli.dao.RoleDao">
+    <resultMap id="BaseResultMap" type="com.dongli.entity.Role">
+        <id column="roleid" property="roleId" jdbcType="INTEGER" />
+        <result column="rolename" property="roleName" jdbcType="VARCHAR" />
+        <result column="permissions" property="permissions" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="findById" resultMap="BaseResultMap" parameterType="hashmap">
+        SELECT * FROM role WHERE roleid = #{roleId}
+    </select>
+
+    <select id="selectAllRole" resultMap="BaseResultMap">
+        SELECT * FROM role
+    </select>
+
+    <select id="selectRoleByName" resultMap="BaseResultMap">
+        SELECT * FROM role
+        <where>
+            roleName = #{roleName}
+        </where>
+    </select>
+</mapper>

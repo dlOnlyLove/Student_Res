@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dongli.dao.SchoolDao">
+    <resultMap id="BaseResultMap" type="com.dongli.entity.School">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="account" property="account" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="role" property="role" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="VARCHAR" />
+        <result column="tel" property="tel" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="school" property="school" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="StudentResultMap" type="com.dongli.entity.Student">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="VARCHAR" />
+        <result column="age" property="age" jdbcType="INTEGER" />
+        <result column="IDNum" property="IDNum" jdbcType="VARCHAR" />
+        <result column="tel" property="tel" jdbcType="VARCHAR" />
+        <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+        <result column="major" property="major" jdbcType="VARCHAR" />
+        <result column="rno" property="rno" jdbcType="VARCHAR" />
+        <result column="registration" property="registration" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="RoomResultMap" type="com.dongli.entity.Room">
+        <result column="rno" property="rno" jdbcType="VARCHAR" />
+        <result column="roomSize" property="roomSize" jdbcType="INTEGER" />
+        <result column="currentSize" property="currentSize" jdbcType="INTEGER" />
+        <result column="major" property="major" jdbcType="VARCHAR" />
+        <result column="roomStatus" property="roomStatus" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="PayResultMap" type="com.dongli.entity.Pay">
+        <result column="IDNum" property="IDNum" jdbcType="VARCHAR" />
+        <result column="money" property="money" jdbcType="VARCHAR" />
+        <result column="payDate" property="payDate" jdbcType="TIMESTAMP"/>
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="tuition" property="tuition" jdbcType="INTEGER" />
+        <result column="dormitoryFee" property="dormitoryFee" jdbcType="INTEGER" />
+        <result column="costumes" property="costumes" jdbcType="INTEGER" />
+        <result column="result" property="result" jdbcType="VARCHAR" />
+        <result column="proofMaterial" property="proofMaterial" jdbcType="VARCHAR" />
+        <result column="loan" property="loan" jdbcType="INTEGER" />
+        <result column="green" property="green" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="insertSchool" parameterType="com.dongli.entity.School" >
+        INSERT INTO school(account, name, sex, tel, email, school, address)
+        VALUES(#{account}, #{name}, #{sex}, #{tel}, #{email}, #{school}, #{address})
+    </insert>
+
+    <select id="selectAllSchool" resultMap="BaseResultMap">
+        SELECT * FROM school
+    </select>
+
+    <insert id="insertStudent" parameterType="com.dongli.entity.Student">
+        INSERT INTO student(name, IDNum, sex, age, tel,
+        birthday, major, rno, registration) VALUES(#{name}, #{IDNum}, #{sex}, #{age},
+        #{tel}, #{birthday}, #{major}, #{rno}, #{registration})
+    </insert>
+
+    <select id="selectStudentByIDNum" resultType="int" parameterType="String">
+        SELECT COUNT(*) FROM student WHERE IDNum = #{IDNum}
+    </select>
+
+    <select id="selectAllStudent" resultMap="StudentResultMap">
+        SELECT * FROM student
+    </select>
+
+    <select id="selectAllRoom" resultMap="RoomResultMap">
+        SELECT * FROM room
+    </select>
+
+    <select id="selectSex" resultType="java.util.HashMap">
+        SELECT SUM(CASE WHEN sex='男' THEN 1 ELSE 0 END ) male, SUM(CASE WHEN sex='女' THEN 1 ELSE 0 END ) female  from student
+        <where>
+            registration = '已报到'
+        </where>
+    </select>
+
+    <select id="selectAll" resultType="java.util.HashMap">
+        SELECT SUM(CASE WHEN registration='已报到' THEN 1 ELSE 0 END ) report, SUM(CASE WHEN registration='未报到' THEN 1 ELSE 0 END ) noreport  from student;
+    </select>
+
+    <insert id="insertRoom" parameterType="com.dongli.entity.Room">
+        INSERT INTO room(rno, roomSize, currentSize, major)
+        VALUES(#{rno}, #{roomSize}, #{currentSize}, #{major})
+    </insert>
+
+    <update id="updateRoom" parameterType="com.dongli.entity.Room">
+        UPDATE room
+        <set>
+            roomSize = #{roomSize}
+        </set>
+        <where>
+            rno = #{rno}
+        </where>
+    </update>
+
+    <delete id="deleteRoom" parameterType="com.dongli.entity.Room">
+        DELETE FROM room
+        <where>
+            rno = #{rno}
+        </where>
+    </delete>
+
+    <select id="selectAllPay" resultMap="PayResultMap">
+        SELECT pay.IDNum, name, money, payDate, tuition, dormitoryFee, green,
+        costumes, loan FROM pay join student on pay.IDNum = student.IDNum
+        WHERE result = '已完成';
+    </select>
+
+    <delete id="deleteStudent" parameterType="String">
+        DELETE FROM student
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </delete>
+
+    <update id="updateStudent" parameterType="com.dongli.entity.Student">
+        UPDATE student
+        <set>
+            name = #{name},
+            sex = #{sex},
+            age = #{age},
+            tel = #{tel},
+            birthday = #{birthday},
+            major = #{major},
+            rno = #{rno},
+            registration = #{registration}
+        </set>
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </update>
+
+    <select id="selectGreen" resultMap="PayResultMap">
+        SELECT pay.IDNum, name, tuition, dormitoryFee, costumes, proofMaterial
+        FROM pay join student on pay.IDNum = student.IDNum
+        WHERE green = '待审核'
+    </select>
+
+    <update id="greenAction" parameterType="com.dongli.entity.Pay">
+        UPDATE pay
+        <set>
+            green = #{green},
+            result = #{result}
+        </set>
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </update>
+
+    <insert id="initPay" parameterType="com.dongli.entity.Student">
+        INSERT INTO pay(IDNum) VALUES(#{IDNum})
+    </insert>
+
+    <insert id="initUser" parameterType="com.dongli.entity.Student">
+        INSERT INTO user(account, password, role)
+        VALUES(#{IDNum}, '123456', 2)
+    </insert>
+
+    <delete id="deletePayByIDNum" parameterType="string">
+        DELETE FROM pay
+        <where>
+            IDNum = #{IDNum}
+        </where>
+    </delete>
+
+    <delete id="deleteUserByIDNum" parameterType="string">
+        DELETE FROM user
+        <where>
+            account = #{IDNum}
+        </where>
+    </delete>
+
+    <update id="updateRoomOfStudent" parameterType="string">
+        UPDATE student
+        <set>
+            rno = '未选择'
+        </set>
+        <where>
+            rno = #{rno}
+        </where>
+    </update>
+</mapper>

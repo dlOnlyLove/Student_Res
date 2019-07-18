@@ -1,0 +1,51 @@
+﻿/*适配不同版本的浏览器*/
+/* start 动画基础 */
+@-webkit-keyframes animate-cloud {
+  from {
+    background-position: 600px 100%;
+  }
+  to {
+    background-position: 0 100%;
+  }
+}
+@-moz-keyframes animate-cloud {
+  from {
+    background-position: 600px 100%;
+  }
+  to {
+    background-position: 0 100%;
+  }
+}
+@-ms-keyframes animate-cloud {
+  from {
+    background-position: 600px 100%;
+  }
+  to {
+    background-position: 0 100%;
+  }
+}
+@-o-keyframes animate-cloud {
+  from {
+    background-position: 600px 100%;
+  }
+  to {
+    background-position: 0 100%;
+  }
+}
+/* end */
+
+html{
+	height: 100%;
+}
+body{
+   background:url(../img/cloud.jpg) 0 bottom repeat-x  #049ec4;
+   /* 产生图片的动画效果 */
+   /* 以下参数分别代表 1.规定@keyframes动画
+					   2.规定动画完成一个周期所花费的时间 
+					   3.规定动画的速度曲线 
+					   4.规定动画被播放的次数*/
+  -webkit-animation: animate-cloud 20s linear infinite;
+  animation: animate-cloud 20s linear 1;
+  width: 100%;
+  height: auto;
+}

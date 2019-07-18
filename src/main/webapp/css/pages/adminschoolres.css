@@ -1,0 +1,41 @@
+/*========== 模态框单选按钮开始 ==========*/
+.res {
+	margin-left: 25%;
+}
+.radio-custom.radio-inline input[type="radio"]{
+	box-sizing:border-box;
+	padding:0;
+	-webkit-appearance: radio;
+	border:initial;
+	opacity: 1;
+}
+.radio-custom.radio-inline input[type="radio"]::before {
+	border-radius: 50%;
+	transform: translate(-3px, -3px);
+	content: '';
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	background: #dae2e7;
+	transition: all 0.2s;
+}
+.radio-custom.radio-inline input[type="radio"]:checked::before {
+	background: #796AEE;
+}
+.radio-custom.radio-inline input[type="radio"]:checked::after {
+	background: #fff;
+	opacity: 1;
+}
+.radio-custom.radio-inline input[type="radio"]::after {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	content: '';
+	display: block;
+	transition: all 0.2s;
+	color: #fff;
+	position: relative;
+	top: -18px;
+	left: 3px;
+}
+/*========== 模态框单选按钮结束 ==========*/
